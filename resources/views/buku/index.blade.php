@@ -4,6 +4,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     </head>
     <body>
+        <a href="{{ route('buku.create') }}" class="btn btn-primary float-end">Tambah Buku</a>
+
         <form method="GET" action="{{ route('buku.index') }}">
             <input type="text" name="search" placeholder="Masukkan judul buku..."
                 value="{{ request('search') }}">
@@ -33,16 +35,25 @@
                         <th>Penulis</th>
                         <th>Harga</th>
                         <th>Tanggal Terbit</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($data_buku as $index => $buku)
                     <tr>
-                        <td>{{ $buku->id }}</td>
+                        <td>{{ $index+1 }}</td>
                         <td>{{ $buku->judul }}</td>
                         <td>{{ $buku->penulis }}</td>
                         <td>{{ "Rp. ".number_format($buku->harga, 2, ',', '.') }}</td>
                         <td>{{ $buku->tgl_terbit->format('d/m/Y') }}</td>
+                        <td>
+                            <a href="{{ route('buku.edit', $buku->id) }}" class="btn btn-warning">Edit</a>
+                            <form action="{{ route('buku.destroy', $buku->id) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button onclick="return confirm('Yakin akan dihapus?')" type="submit" class="btn btn-danger">Hapus</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
